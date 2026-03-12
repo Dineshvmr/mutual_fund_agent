@@ -1,0 +1,17 @@
+packages:
+  "framer-motion": "For smooth step transitions in the wizard and engaging loading states"
+  "react-hook-form": "For robust handling of the multi-step questionnaire state"
+  "@hookform/resolvers": "Zod integration for form validation"
+  "zod": "Schema validation for the questionnaire form"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility to cleanly merge tailwind classes"
+
+images:
+  - path: "artifacts/mutual-fund-agent/public/images/hero-finance.png"
+    description: "Abstract geometric background in deep navy blue and bright teal with subtle glowing lines and subtle 3d glassmorphism shapes representing financial growth, clean minimal premium aesthetic"
+    aspect_ratio: "16:9"
+
+notes:
+  - Using generated orval hooks from @workspace/api-client-react for data fetching.
+  - The application uses Framer Motion for highly polished entry and exit animations.
+  - The color palette is tailored for a trustworthy, premium financial application (deep blues, teals, and crisp white).

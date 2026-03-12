@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Mutual Fund Analysis Agent"
+version = "1.0.0"
+id = "artifacts/mutual-fund-agent"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+localPort = 19320
+name = "web"
+paths = ["/"]
+
+[services.development]
+run = "pnpm --filter @workspace/mutual-fund-agent run dev"
+
+[services.env]
+PORT = "19320"
+BASE_PATH = "/"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/mutual-fund-agent", "run", "build"]
+publicDir = "artifacts/mutual-fund-agent/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"

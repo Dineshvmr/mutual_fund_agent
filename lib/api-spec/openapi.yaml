@@ -1,15 +1,16 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Mutual Fund Analysis Agent API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: analysis
+    description: Mutual fund analysis operations
 paths:
   /healthz:
     get:
@@ -24,6 +25,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /analysis/recommend:
+    post:
+      operationId: getRecommendations
+      tags: [analysis]
+      summary: Get mutual fund recommendations
+      description: Analyze user investment profile and return tailored mutual fund recommendations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvestmentProfile"
+      responses:
+        "200":
+          description: Recommendations generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecommendationResult"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +65,112 @@ components:
           type: string
       required:
         - status
-
+    InvestmentProfile:
+      type: object
+      properties:
+        timeHorizon:
+          type: string
+          enum: [short, medium, long]
+          description: "short = <3 years, medium = 3-7 years, long = >7 years"
+        goal:
+          type: string
+          description: Investment purpose/goal (e.g. retirement, child education, wealth creation, emergency fund)
+        tenure:
+          type: number
+          description: Specific tenure in years
+        investingNature:
+          type: string
+          enum: [sip, one-time]
+          description: SIP (Systematic Investment Plan) or one-time lump sum
+        monthlyAmount:
+          type: number
+          description: Monthly SIP amount in INR (required if investingNature is sip)
+        lumpSumAmount:
+          type: number
+          description: Lump sum amount in INR (required if investingNature is one-time)
+        riskTolerance:
+          type: string
+          enum: [low, moderate, high]
+          description: User's risk tolerance level
+      required:
+        - timeHorizon
+        - goal
+        - tenure
+        - investingNature
+        - riskTolerance
+    MutualFundRecommendation:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Fund name
+        category:
+          type: string
+          description: Fund category (e.g. Large Cap, Mid Cap, ELSS, Debt, etc.)
+        amcName:
+          type: string
+          description: Asset Management Company name
+        riskLevel:
+          type: string
+          enum: [low, moderate, moderately-high, high, very-high]
+        returnPotential:
+          type: string
+          description: Expected return range (e.g. 10-12% p.a.)
+        whyRecommended:
+          type: string
+          description: Personalized explanation of why this fund suits the user
+        keyHighlights:
+          type: array
+          items:
+            type: string
+          description: Key features of the fund
+        sipMinAmount:
+          type: number
+          description: Minimum SIP amount in INR
+        lumpSumMinAmount:
+          type: number
+          description: Minimum lump sum investment in INR
+        taxBenefit:
+          type: boolean
+          description: Whether the fund offers tax benefits under 80C
+      required:
+        - name
+        - category
+        - amcName
+        - riskLevel
+        - returnPotential
+        - whyRecommended
+        - keyHighlights
+        - sipMinAmount
+        - lumpSumMinAmount
+        - taxBenefit
+    RecommendationResult:
+      type: object
+      properties:
+        summary:
+          type: string
+          description: Overall analysis summary for the user
+        recommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/MutualFundRecommendation"
+        disclaimer:
+          type: string
+          description: Standard financial disclaimer
+        projectedValue:
+          type: string
+          description: Estimated future value based on inputs
+      required:
+        - summary
+        - recommendations
+        - disclaimer
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
+        - message
