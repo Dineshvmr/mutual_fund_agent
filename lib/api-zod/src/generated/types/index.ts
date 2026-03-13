@@ -7,6 +7,8 @@
  */
 
 export * from "./errorResponse";
+export * from "./fundCosts";
+export * from "./fundPerformance";
 export * from "./healthStatus";
 export * from "./investmentProfile";
 export * from "./investmentProfileInvestingNature";
@@ -14,4 +16,5 @@ export * from "./investmentProfileRiskTolerance";
 export * from "./investmentProfileTimeHorizon";
 export * from "./mutualFundRecommendation";
 export * from "./mutualFundRecommendationRiskLevel";
+export * from "./navDataPoint";
 export * from "./recommendationResult";
