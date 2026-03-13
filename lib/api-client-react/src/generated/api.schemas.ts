@@ -61,6 +61,37 @@ export interface InvestmentProfile {
   riskTolerance: InvestmentProfileRiskTolerance;
 }
 
+export interface NavDataPoint {
+  /** Date in YYYY-MM-DD format */
+  date: string;
+  /** NAV value on this date */
+  nav: number;
+}
+
+export interface FundPerformance {
+  /** 1-year return percentage */
+  oneYear: number;
+  /** 3-year CAGR percentage */
+  threeYear: number;
+  /** 5-year CAGR percentage */
+  fiveYear: number;
+  /** Since inception CAGR percentage */
+  sinceInception: number;
+  /** Year the fund was launched */
+  inceptionYear: number;
+}
+
+export interface FundCosts {
+  /** Annual expense ratio percentage (Direct plan) */
+  expenseRatio: number;
+  /** Exit load details (e.g. "1% if redeemed within 1 year") */
+  exitLoad: string;
+  /** Stamp duty applicable */
+  stampDuty: string;
+  /** Tax applicable on returns (LTCG / STCG / Debt taxation) */
+  taxOnReturns: string;
+}
+
 export type MutualFundRecommendationRiskLevel =
   (typeof MutualFundRecommendationRiskLevel)[keyof typeof MutualFundRecommendationRiskLevel];
 
@@ -92,6 +123,12 @@ export interface MutualFundRecommendation {
   lumpSumMinAmount: number;
   /** Whether the fund offers tax benefits under 80C */
   taxBenefit: boolean;
+  performance: FundPerformance;
+  costs: FundCosts;
+  /** AMFI scheme code used to fetch NAV data (null if lookup failed) */
+  schemeCode?: number | null;
+  /** Monthly-sampled historical NAV data from AMFI (oldest first) */
+  navHistory?: NavDataPoint[];
 }
 
 export interface RecommendationResult {
