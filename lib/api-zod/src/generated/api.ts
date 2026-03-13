@@ -79,6 +79,48 @@ export const GetRecommendationsResponse = zod.object({
       taxBenefit: zod
         .boolean()
         .describe("Whether the fund offers tax benefits under 80C"),
+      performance: zod.object({
+        oneYear: zod.number().describe("1-year return percentage"),
+        threeYear: zod.number().describe("3-year CAGR percentage"),
+        fiveYear: zod.number().describe("5-year CAGR percentage"),
+        sinceInception: zod
+          .number()
+          .describe("Since inception CAGR percentage"),
+        inceptionYear: zod.number().describe("Year the fund was launched"),
+      }),
+      costs: zod.object({
+        expenseRatio: zod
+          .number()
+          .describe("Annual expense ratio percentage (Direct plan)"),
+        exitLoad: zod
+          .string()
+          .describe(
+            'Exit load details (e.g. \"1% if redeemed within 1 year\")',
+          ),
+        stampDuty: zod.string().describe("Stamp duty applicable"),
+        taxOnReturns: zod
+          .string()
+          .describe(
+            "Tax applicable on returns (LTCG \/ STCG \/ Debt taxation)",
+          ),
+      }),
+      schemeCode: zod
+        .number()
+        .nullish()
+        .describe(
+          "AMFI scheme code used to fetch NAV data (null if lookup failed)",
+        ),
+      navHistory: zod
+        .array(
+          zod.object({
+            date: zod.string().describe("Date in YYYY-MM-DD format"),
+            nav: zod.number().describe("NAV value on this date"),
+          }),
+        )
+        .optional()
+        .describe(
+          "Monthly-sampled historical NAV data from AMFI (oldest first)",
+        ),
     }),
   ),
   disclaimer: zod.string().describe("Standard financial disclaimer"),
