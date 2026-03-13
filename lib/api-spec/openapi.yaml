@@ -98,6 +98,62 @@ components:
         - tenure
         - investingNature
         - riskTolerance
+    NavDataPoint:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format
+        nav:
+          type: number
+          description: NAV value on this date
+      required:
+        - date
+        - nav
+    FundPerformance:
+      type: object
+      properties:
+        oneYear:
+          type: number
+          description: 1-year return percentage
+        threeYear:
+          type: number
+          description: 3-year CAGR percentage
+        fiveYear:
+          type: number
+          description: 5-year CAGR percentage
+        sinceInception:
+          type: number
+          description: Since inception CAGR percentage
+        inceptionYear:
+          type: number
+          description: Year the fund was launched
+      required:
+        - oneYear
+        - threeYear
+        - fiveYear
+        - sinceInception
+        - inceptionYear
+    FundCosts:
+      type: object
+      properties:
+        expenseRatio:
+          type: number
+          description: Annual expense ratio percentage (Direct plan)
+        exitLoad:
+          type: string
+          description: Exit load details (e.g. "1% if redeemed within 1 year")
+        stampDuty:
+          type: string
+          description: Stamp duty applicable
+        taxOnReturns:
+          type: string
+          description: Tax applicable on returns (LTCG / STCG / Debt taxation)
+      required:
+        - expenseRatio
+        - exitLoad
+        - stampDuty
+        - taxOnReturns
     MutualFundRecommendation:
       type: object
       properties:
@@ -133,6 +189,19 @@ components:
         taxBenefit:
           type: boolean
           description: Whether the fund offers tax benefits under 80C
+        performance:
+          $ref: "#/components/schemas/FundPerformance"
+        costs:
+          $ref: "#/components/schemas/FundCosts"
+        schemeCode:
+          type: number
+          description: AMFI scheme code used to fetch NAV data (null if lookup failed)
+          nullable: true
+        navHistory:
+          type: array
+          description: Monthly-sampled historical NAV data from AMFI (oldest first)
+          items:
+            $ref: "#/components/schemas/NavDataPoint"
       required:
         - name
         - category
@@ -144,6 +213,8 @@ components:
         - sipMinAmount
         - lumpSumMinAmount
         - taxBenefit
+        - performance
+        - costs
     RecommendationResult:
       type: object
       properties:
