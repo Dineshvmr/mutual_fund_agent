@@ -5,7 +5,10 @@
  * Mutual Fund Analysis Agent API
  * OpenAPI spec version: 0.1.0
  */
+import type { FundCosts } from "./fundCosts";
+import type { FundPerformance } from "./fundPerformance";
 import type { MutualFundRecommendationRiskLevel } from "./mutualFundRecommendationRiskLevel";
+import type { NavDataPoint } from "./navDataPoint";
 
 export interface MutualFundRecommendation {
   /** Fund name */
@@ -27,4 +30,10 @@ export interface MutualFundRecommendation {
   lumpSumMinAmount: number;
   /** Whether the fund offers tax benefits under 80C */
   taxBenefit: boolean;
+  performance: FundPerformance;
+  costs: FundCosts;
+  /** AMFI scheme code used to fetch NAV data (null if lookup failed) */
+  schemeCode?: number | null;
+  /** Monthly-sampled historical NAV data from AMFI (oldest first) */
+  navHistory?: NavDataPoint[];
 }
